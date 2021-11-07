@@ -53,9 +53,11 @@ namespace WinUiKanji
         [ObservableProperty, AlsoNotifyChangeFor(nameof(CurrentCard))]
         private int _currentTermIndex;
 
-        [ObservableProperty, AlsoNotifyChangeFor(nameof(CurrentCard))]
+        [ObservableProperty, AlsoNotifyChangeFor(nameof(CurrentCard)), AlsoNotifyChangeFor(nameof(SourceSetLength))]
         private Card[] _sourceSet;
 
         public Card CurrentCard => _sourceSet[CurrentTermIndex];
+        public string SourceSetLength => SourceSet.Length.ToString();
+
     }
 }
