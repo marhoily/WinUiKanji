@@ -30,17 +30,21 @@ namespace WinUiKanji
             _rnd.Shuffle(SourceSet);
         }
 
-        [ICommand]
-        private void NextCard()
+        [ICommand] private Task PrevCard() => Go(-1);
+        [ICommand] private Task NextCard() => Go(1);
+
+        private async Task Go(int i)
         {
-            var nextVal = (CurrentTermIndex + 1) % SourceSet.Length;
-            if (nextVal == 0)
+            var nextVal = (CurrentTermIndex + i) % SourceSet.Length;
+            if (nextVal == -1) return;
+            if (nextVal == 0 && i == 1)
+            {
                 _rnd.Shuffle(SourceSet);
+                BackgroundMediaPlayer.Current.SetUriSource(
+                    new Uri("ms-winsoundevent:Notification.SMS"));
+                await Task.Delay(TimeSpan.FromSeconds(1));
+            }
             CurrentTermIndex = nextVal;
-            Pronounce().GetAwaiter();
-        }
-        private async Task Pronounce()
-        {
             var stream = await _synthesizer.SynthesizeTextToStreamAsync(CurrentCard.ToPronounce);
             BackgroundMediaPlayer.Current.Source =
                 MediaSource.CreateFromStream(stream, stream.ContentType);

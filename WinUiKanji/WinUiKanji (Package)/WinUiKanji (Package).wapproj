@@ -41,7 +41,6 @@
     <AssetTargetFallback>net5.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
-    <EntryPointProjzectUniqueName>..\WinUiKanji\WinUiKanji.csproj</EntryPointProjzectUniqueName>
     <EntryPointProjectUniqueName>..\WinUiKanji\WinUiKanji.csproj</EntryPointProjectUniqueName>
   </PropertyGroup>
   <ItemGroup>

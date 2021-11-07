@@ -1,15 +1,9 @@
-﻿using Microsoft.UI.Xaml.Controls;
-
-namespace WinUiKanji
+﻿namespace WinUiKanji
 {
-    public sealed partial class MainControl : UserControl
+    public sealed partial class MainControl
     {
-        public MainControl()
-        {
-            this.InitializeComponent();
-            ViewModel = new MainViewModel();
-        }
-        public MainViewModel ViewModel { get; }
+        public MainViewModel ViewModel { get; } = new();
 
+        public MainControl() => InitializeComponent();
     }
 }
