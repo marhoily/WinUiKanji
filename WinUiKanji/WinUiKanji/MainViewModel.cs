@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -26,10 +27,11 @@ namespace WinUiKanji
             using var reader = new StreamReader(@"C:\git\Kanji\WordsToStudy4.csv");
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
             _sourceSet = csv.GetRecords<Card>().ToArray();
+            _rnd.Shuffle(SourceSet);
         }
 
         [ICommand]
-        private void MoveNext()
+        private void NextCard()
         {
             var nextVal = (CurrentTermIndex + 1) % SourceSet.Length;
             if (nextVal == 0)
@@ -39,25 +41,17 @@ namespace WinUiKanji
         }
         private async Task Pronounce()
         {
-            var stream = await _synthesizer.SynthesizeTextToStreamAsync(CurrentKanji);
-            BackgroundMediaPlayer.Current.Source = 
+            var stream = await _synthesizer.SynthesizeTextToStreamAsync(CurrentCard.ToPronounce);
+            BackgroundMediaPlayer.Current.Source =
                 MediaSource.CreateFromStream(stream, stream.ContentType);
         }
 
-        [ObservableProperty]
-        [AlsoNotifyChangeFor(nameof(CurrentKanji))]
-        [AlsoNotifyChangeFor(nameof(CurrentMeaning))]
-        [AlsoNotifyChangeFor(nameof(CurrentToPronounce))]
+        [ObservableProperty, AlsoNotifyChangeFor(nameof(CurrentCard))]
         private int _currentTermIndex;
 
-        [ObservableProperty]
-        [AlsoNotifyChangeFor(nameof(CurrentKanji))]
-        [AlsoNotifyChangeFor(nameof(CurrentMeaning))]
-        [AlsoNotifyChangeFor(nameof(CurrentToPronounce))]
+        [ObservableProperty, AlsoNotifyChangeFor(nameof(CurrentCard))]
         private Card[] _sourceSet;
 
-        public string CurrentKanji => _sourceSet[CurrentTermIndex].Kanji;
-        public string CurrentMeaning => _sourceSet[CurrentTermIndex].Meaning;
-        public string CurrentToPronounce => _sourceSet[CurrentTermIndex].ToPronounce;
+        public Card CurrentCard => _sourceSet[CurrentTermIndex];
     }
 }
