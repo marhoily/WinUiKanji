@@ -57,22 +57,33 @@
                    Margin="20"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Top">
-            <Run Text="{x:Bind ViewModel.CurrentTermIndex.ToString(), Mode=OneWay}"/>
+            <Run Text="{x:Bind ViewModel.CurrentIndexStr, Mode=OneWay}"/>
             <Run Text="/"/>
             <Run Text="{x:Bind ViewModel.SourceSetLength, Mode=OneWay}"/>
         </TextBlock>
-        
-        <Button Content="→" Margin="5"
+
+        <StackPanel  Orientation="Vertical"
+            Grid.Row="4" Grid.Column="2" 
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center">
+            <Button Content="🗸" Margin="5"
                 Padding="30,5"
-                Grid.Row="4" Grid.Column="2" 
-                VerticalAlignment="Top"
                 FontSize="20"
-                Command="{x:Bind ViewModel.NextCardCommand}"
-                HorizontalAlignment="Center" >
-            <Button.KeyboardAccelerators>
-                <KeyboardAccelerator Key="Right" />
-                <KeyboardAccelerator Key="Escape" />
-            </Button.KeyboardAccelerators>
-        </Button>
+                Command="{x:Bind ViewModel.CorrectGoNextCommand}">
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Right" />
+                    <KeyboardAccelerator Key="Escape" />
+                </Button.KeyboardAccelerators>
+            </Button>
+            <Button Content="✗" Margin="5"
+                Padding="30,5"
+                FontSize="20"
+                Command="{x:Bind ViewModel.WrongTaskGoNextCommand}">
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Enter" />
+                </Button.KeyboardAccelerators>
+            </Button>
+        </StackPanel>
+
     </Grid>
 </UserControl>
