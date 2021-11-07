@@ -41,18 +41,43 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Top"
                    Text="{x:Bind ViewModel.CurrentCard.Meaning, Mode=OneWay}" />
-        <Button Content="←" Margin="5"
+
+        <StackPanel Orientation="Vertical"
+            Grid.Row="4" Grid.Column="0" 
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center">
+
+            <Button Content="?" Margin="5"
                 Padding="30,5"
-                Grid.Row="4" Grid.Column="0" 
-                VerticalAlignment="Top"
+                FontSize="20"
+                IsTabStop="False"
+                Command="{x:Bind ViewModel.ReadQuestionCommand}"
+                HorizontalAlignment="Center" >
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Up" />
+                </Button.KeyboardAccelerators>
+            </Button>
+            <Button Content="←" Margin="5"
+                Padding="30,5"
                 FontSize="20"
                 IsTabStop="False"
                 Command="{x:Bind ViewModel.PrevCardCommand}"
                 HorizontalAlignment="Center" >
-            <Button.KeyboardAccelerators>
-                <KeyboardAccelerator Key="Left" />
-            </Button.KeyboardAccelerators>
-        </Button>
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Left" />
+                </Button.KeyboardAccelerators>
+            </Button>
+            <Button Content="!" Margin="5"
+                Padding="30,5"
+                FontSize="20"
+                IsTabStop="False"
+                Command="{x:Bind ViewModel.ReadAnswerCommand}"
+                HorizontalAlignment="Center" >
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Down" />
+                </Button.KeyboardAccelerators>
+            </Button>
+        </StackPanel>
         <TextBlock 
                    Grid.Row="4" Grid.Column="1"
                    Margin="20"

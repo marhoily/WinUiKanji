@@ -96,13 +96,18 @@ namespace WinUiKanji
             OnPropertyChanged(nameof(SourceSetLength));
             await Go(1);
         }
+        [ICommand]
+        private Task ReadQuestion() => AnswerIsMeaning ? ReadPronounciation() : ReadMeaning();
+        [ICommand]
+        private Task ReadAnswer() => AnswerIsMeaning ? ReadMeaning() : ReadPronounciation();
 
         private async Task Go(int i)
         {
             if (ReadAnswerEnabled && !_answerIsRead)
             {
-                await (AnswerIsMeaning ? ReadMeaning() : ReadPronounciation());
-                _answerIsRead = true;
+                await ReadAnswer();
+                if (i == 1)
+                    _answerIsRead = true;
                 return;
             }
             var nextVal = (CurrentTermIndex + i) % SourceSet.Count;
@@ -116,8 +121,9 @@ namespace WinUiKanji
                 await Task.Delay(TimeSpan.FromSeconds(1));
             }
             CurrentTermIndex = nextVal;
-            await (AnswerIsMeaning ? ReadPronounciation() : ReadMeaning());
-            _answerIsRead = false;
+            await ReadQuestion();
+            if (i == 1)
+                _answerIsRead = false;
         }
 
         private List<Card> Reshuffle()
