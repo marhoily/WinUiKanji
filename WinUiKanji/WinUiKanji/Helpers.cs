@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WinUiKanji
 {
     public static class Helpers
     {
-        /// <summary>
-        /// Knuth shuffle
-        /// </summary>        
-        public static void Shuffle<T>(this Random rnd, IList<T> array)
+        public static List<T> Shuffle<T>(this IEnumerable<T> array, Random rnd)
         {
-            var n = array.Count;
+            var result = array.ToList();
+            var n = result.Count;
             while (n > 1)
             {
                 n--;
                 var i = rnd.Next(n + 1);
-                (array[i], array[n]) = (array[n], array[i]);
+                (result[i], result[n]) = (result[n], result[i]);
             }
+            return result;
         }
     }
 }

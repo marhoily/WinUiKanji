@@ -46,6 +46,7 @@
                 Grid.Row="4" Grid.Column="0" 
                 VerticalAlignment="Top"
                 FontSize="20"
+                IsTabStop="False"
                 Command="{x:Bind ViewModel.PrevCardCommand}"
                 HorizontalAlignment="Center" >
             <Button.KeyboardAccelerators>
@@ -68,6 +69,16 @@
             HorizontalAlignment="Center">
             <Button Content="🗸" Margin="5"
                 Padding="30,5"
+                IsTabStop="False"
+                FontSize="20"
+                Command="{x:Bind ViewModel.WellKnownGoNextCommand}">
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Space" />
+                </Button.KeyboardAccelerators>
+            </Button>
+            <Button Content="⤳" Margin="5"
+                Padding="30,5"
+                IsTabStop="False"
                 FontSize="20"
                 Command="{x:Bind ViewModel.CorrectGoNextCommand}">
                 <Button.KeyboardAccelerators>
@@ -77,8 +88,9 @@
             </Button>
             <Button Content="✗" Margin="5"
                 Padding="30,5"
+                IsTabStop="False"
                 FontSize="20"
-                Command="{x:Bind ViewModel.WrongTaskGoNextCommand}">
+                Command="{x:Bind ViewModel.WrongGoNextCommand}">
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="Enter" />
                 </Button.KeyboardAccelerators>

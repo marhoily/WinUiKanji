@@ -9,7 +9,7 @@
   <Identity
     Name="a82cab96-f0d5-4643-96dc-7ac1adbfe7ae"
     Publisher="CN=marho"
-    Version="1.0.0.0" />
+    Version="0.1.0.0" />
 
   <Properties>
     <DisplayName>Kanji (Package)</DisplayName>
