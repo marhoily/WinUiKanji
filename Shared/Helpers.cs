@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WinUiKanji
+namespace Shared
 {
     public static class Helpers
     {
-        public static List<T> Shuffle<T>(this IEnumerable<T> array, Random rnd)
+        private static readonly Random Rnd = new();
+
+        public static List<T> Shuffle<T>(this IEnumerable<T> array)
         {
             var result = array.ToList();
             var n = result.Count;
             while (n > 1)
             {
                 n--;
-                var i = rnd.Next(n + 1);
+                var i = Rnd.Next(n + 1);
                 (result[i], result[n]) = (result[n], result[i]);
             }
             return result;

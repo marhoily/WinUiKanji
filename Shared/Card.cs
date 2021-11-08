@@ -1,7 +1,6 @@
-﻿
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
-namespace WinUiKanji
+namespace Shared
 {
     [UsedImplicitly]
     public sealed class Card

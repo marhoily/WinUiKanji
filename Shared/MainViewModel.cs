@@ -1,27 +1,21 @@
-﻿using System;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using Windows.Media.Core;
-using Windows.Media.Playback;
-using Windows.Media.SpeechSynthesis;
-using CommunityToolkit.WinUI.UI.Controls.TextToolbarSymbols;
-using CsvHelper;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using CsvHelper.Configuration;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace WinUiKanji
+namespace Shared
 {
-  /*  public partial class MainViewModel : ObservableObject
+    public partial class MainViewModel : ObservableObject
     {
         private readonly Random _rnd = new();
-        private readonly SpeechSynthesizer _synthesizer = new();
-
+        private readonly IPlayer _player;
         private const bool ReadAnswerEnabled = true;
         private const bool AnswerIsMeaning = true;
         private const string Words = @"C:\git\WinUiKanji\StudySets\2021-oct-7.csv";
@@ -42,13 +36,13 @@ namespace WinUiKanji
         public string CurrentIndexStr => (CurrentTermIndex + 1).ToString();
         public string SourceSetLength => SourceSet.Count.ToString();
 
-        public MainViewModel()
+        public MainViewModel(IPlayer player)
         {
-            BackgroundMediaPlayer.Current.AutoPlay = true;
             using var reader = new StreamReader(Words);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
             _originalSet = csv.GetRecords<Card>().ToArray();
             _sourceSet = Reshuffle();
+            _player = player;
         }
 
         [ICommand]
@@ -116,9 +110,7 @@ namespace WinUiKanji
             {
                 _sourceSet = Reshuffle();
                 OnPropertyChanged(nameof(SourceSetLength));
-                BackgroundMediaPlayer.Current.SetUriSource(
-                    new Uri("ms-winsoundevent:Notification.SMS"));
-                await Task.Delay(TimeSpan.FromSeconds(1));
+                await _player.Blimp();
             }
             CurrentTermIndex = nextVal;
             await ReadQuestion();
@@ -126,13 +118,11 @@ namespace WinUiKanji
                 _answerIsRead = false;
         }
 
-        private List<Card> Reshuffle()
-        {
-            return _originalSet
+        private List<Card> Reshuffle() => _originalSet
                 .Where(card => card.WellKnown < 2)
-                .Shuffle(_rnd);
-        }
+                .Shuffle();
 
-    
-    }*/
+        private async Task ReadMeaning() => await _player.Say("us-EN", CurrentCard.Meaning);
+        private async Task ReadPronounciation() => await _player.Say("ja-JP", CurrentCard.ToPronounce);
+    }
 }
