@@ -28,41 +28,41 @@ public sealed class MainViewModelTests : MainViewModelTestBase, IDisposable
     {
         await Sut.GoBack();
         Sut.CurrentTermIndex.Should().Be(0);
-        await Sut.CorrectGoNext();
+        await Sut.GoAhead();
         Sut.CurrentTermIndex.Should().Be(0);
         _player.EvictPlaylist();
     }
     [Fact]
     public async Task GoBack_When_At0R_Should_Reset_AnswerIsRead()
     {
-        await Sut.CorrectGoNext();
+        await Sut.GoAhead();
         await Sut.GoBack();
         Sut.CurrentTermIndex.Should().Be(0);
-        await Sut.CorrectGoNext();
+        await Sut.GoAhead();
         Sut.CurrentTermIndex.Should().Be(0);
         _player.EvictPlaylist();
     }
     [Fact]
     public async Task CorrectGoNext_Should_Read_Answer()
     {
-        await Sut.CorrectGoNext();
+        await Sut.GoAhead();
         Sut.CurrentTermIndex.Should().Be(0);
         _player.EvictPlaylist().Should().Equal("en-US: m1");
-        await Sut.CorrectGoNext();
+        await Sut.GoAhead();
         Sut.CurrentTermIndex.Should().Be(1);
         _player.EvictPlaylist().Should().Equal("ja-JP: p2");
-        await Sut.CorrectGoNext();
+        await Sut.GoAhead();
         Sut.CurrentTermIndex.Should().Be(1);
         _player.EvictPlaylist().Should().Equal("en-US: m2");
     }
     [Fact]
     public async Task CorrectGoNext_When_WrapAround_Should_Reshuffle()
     {
-        await Sut.CorrectGoNext(); // 1R
-        await Sut.CorrectGoNext(); // 2
-        await Sut.CorrectGoNext(); // 2R
+        await Sut.GoAhead(); // 1R
+        await Sut.GoAhead(); // 2
+        await Sut.GoAhead(); // 2R
         _studySet.EvictWorkLog().Should().BeEmpty();
-        await Sut.CorrectGoNext(); // Reshuffle
+        await Sut.GoAhead(); // Reshuffle
         _studySet.EvictWorkLog().Should().Equal("reshuffled");
         IgnorePlayActions();
     }

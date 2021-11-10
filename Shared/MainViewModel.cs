@@ -44,7 +44,7 @@ namespace Shared
         }
 
         [ICommand]
-        public async Task WellKnownGoNext()
+        public async Task ItIsGettingRepetitive()
         {
             _answerIsRead = true;
             await ChangeWellKnownMarker(+1);
@@ -57,10 +57,10 @@ namespace Shared
             await _studySet.SaveAsync();
         }
 
-        [ICommand] public Task CorrectGoNext() => Go(1);
+        [ICommand] public Task GoAhead() => Go(1);
 
         [ICommand]
-        public async Task WrongGoNext()
+        public async Task DoNotKnow()
         {
             await ChangeWellKnownMarker(-1);
             if (!_answerIsRead)
