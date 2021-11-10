@@ -39,7 +39,7 @@ namespace Shared
         [ICommand]
         public async Task GoBack()
         {
-            _answerIsRead = false;  
+            _answerIsRead = false;
             if (CurrentTermIndex == 0)
                 return;
             CurrentTermIndex--;
@@ -63,22 +63,31 @@ namespace Shared
         [ICommand]
         public async Task GoAhead()
         {
-            if (ReadAnswerEnabled && !_answerIsRead)
+            if (_answerIsRead || !ReadAnswerEnabled)
+            {
+                await ReadQuestionAndStuff();
+                _answerIsRead = false;
+            }
+            else
             {
                 await ReadAnswer();
                 _answerIsRead = true;
-                return;
             }
-            var nextVal = (CurrentTermIndex + 1) % WorkingSet.Count;
-            if (nextVal == 0)
+
+
+            async Task ReadQuestionAndStuff()
+            {
+                CurrentTermIndex = (CurrentTermIndex + 1) % WorkingSet.Count;
+                if (CurrentTermIndex == 0) await Reshuffle();
+                await ReadQuestion();
+            }
+
+            async Task Reshuffle()
             {
                 _workingSet = _studySet.GetShuffle();
                 OnPropertyChanged(nameof(WorkingSetLength));
                 await _player.Blimp();
             }
-            CurrentTermIndex = nextVal;
-            await ReadQuestion();
-            _answerIsRead = false;
         }
 
         [ICommand]
