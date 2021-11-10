@@ -37,10 +37,13 @@ namespace Shared
         }
 
         [ICommand]
-        public Task GoBack()
+        public async Task GoBack()
         {
-            _answerIsRead = false;
-            return Go(-1);
+            _answerIsRead = false;  
+            if (CurrentTermIndex == 0)
+                return;
+            CurrentTermIndex--;
+            await ReadQuestion();
         }
 
         [ICommand]
@@ -48,7 +51,7 @@ namespace Shared
         {
             _answerIsRead = true;
             await ChangeWellKnownMarker(+1);
-            await Go(1);
+            await GoAhead();
         }
 
         private async Task ChangeWellKnownMarker(int increment)
@@ -57,40 +60,17 @@ namespace Shared
             await _studySet.SaveAsync();
         }
 
-        [ICommand] public Task GoAhead() => Go(1);
-
         [ICommand]
-        public async Task DoNotKnow()
+        public async Task GoAhead()
         {
-            await ChangeWellKnownMarker(-1);
-            if (!_answerIsRead)
-            {
-                await Go(1);
-                await Task.Delay(TimeSpan.FromSeconds(1));
-            }
-            _workingSet.Insert(CurrentTermIndex + 2, CurrentCard);
-            _workingSet.Add(CurrentCard);
-            OnPropertyChanged(nameof(WorkingSetLength));
-            await Go(1);
-        }
-        [ICommand]
-        public Task ReadQuestion() => AnswerIsMeaning ? ReadPronounciation() : ReadMeaning();
-        [ICommand]
-        public Task ReadAnswer() => AnswerIsMeaning ? ReadMeaning() : ReadPronounciation();
-
-        private async Task Go(int i)
-        {
-            if (ReadAnswerEnabled && !_answerIsRead && i >= 0)
+            if (ReadAnswerEnabled && !_answerIsRead)
             {
                 await ReadAnswer();
-                if (i == 1)
-                    _answerIsRead = true;
+                _answerIsRead = true;
                 return;
             }
-            var nextVal = (CurrentTermIndex + i) % WorkingSet.Count;
-            if (nextVal == -1) 
-                return;
-            if (nextVal == 0 && i == 1)
+            var nextVal = (CurrentTermIndex + 1) % WorkingSet.Count;
+            if (nextVal == 0)
             {
                 _workingSet = _studySet.GetShuffle();
                 OnPropertyChanged(nameof(WorkingSetLength));
@@ -98,9 +78,28 @@ namespace Shared
             }
             CurrentTermIndex = nextVal;
             await ReadQuestion();
-            if (i == 1)
-                _answerIsRead = false;
+            _answerIsRead = false;
         }
+
+        [ICommand]
+        public async Task DoNotKnow()
+        {
+            await ChangeWellKnownMarker(-1);
+            if (!_answerIsRead)
+            {
+                await GoAhead();
+                await Task.Delay(TimeSpan.FromSeconds(1));
+            }
+            _workingSet.Insert(CurrentTermIndex + 2, CurrentCard);
+            _workingSet.Add(CurrentCard);
+            OnPropertyChanged(nameof(WorkingSetLength));
+            await GoAhead();
+        }
+        [ICommand]
+        public Task ReadQuestion() => AnswerIsMeaning ? ReadPronounciation() : ReadMeaning();
+        [ICommand]
+        public Task ReadAnswer() => AnswerIsMeaning ? ReadMeaning() : ReadPronounciation();
+
 
         private async Task ReadMeaning() => await _player.Say("en-US", CurrentCard.Meaning);
         private async Task ReadPronounciation() => await _player.Say("ja-JP", CurrentCard.ToPronounce);
