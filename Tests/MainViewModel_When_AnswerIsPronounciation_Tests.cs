@@ -1,13 +1,13 @@
-﻿using Shared;
-
-namespace Tests;
+﻿namespace Tests;
 
 public sealed class MainViewModel_When_AnswerIsPronounciation_Tests : MainViewModelTestBase
 {
 
     public MainViewModel_When_AnswerIsPronounciation_Tests()
     {
-    
+        Sut = new(_player, _studySet);
+        // Ignore initial reshuffle
+        _studySet.EvictWorkLog().Should().Equal("reshuffled");
         Sut.AnswerIsMeaning = false;
     }
 

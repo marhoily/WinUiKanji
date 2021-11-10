@@ -1,12 +1,13 @@
-﻿using Shared;
-
-namespace Tests;
+﻿namespace Tests;
 
 public sealed class MainViewModel_When_ReadAnswer_Disabled_Tests : MainViewModelTestBase
 {
     public MainViewModel_When_ReadAnswer_Disabled_Tests()
     {
         _studySet.Cards.Add(C3);
+        Sut = new(_player, _studySet);
+        // Ignore initial reshuffle
+        _studySet.EvictWorkLog().Should().Equal("reshuffled");
         Sut.ReadAnswerEnabled = false;
     }
 

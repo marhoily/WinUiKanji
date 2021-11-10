@@ -1,9 +1,13 @@
-using Shared;
-
 namespace Tests
 {
     public sealed class MainViewModelTests : MainViewModelTestBase, IDisposable
     {
+        public MainViewModelTests()
+        {
+            Sut = new(_player, _studySet);
+            // Ignore initial reshuffle
+            _studySet.EvictWorkLog().Should().Equal("reshuffled");
+        }
         [Fact]
         public void CurrentIndexStr()
         {
@@ -57,24 +61,22 @@ namespace Tests
             await Sut.CorrectGoNext(); // 1R
             await Sut.CorrectGoNext(); // 2
             await Sut.CorrectGoNext(); // 2R
-            var original = Sut.WorkingSet;
+            _studySet.EvictWorkLog().Should().BeEmpty();
             await Sut.CorrectGoNext(); // Reshuffle
-            Sut.WorkingSet.Should().NotBeSameAs(original);
-            _player.EvictPlaylist();
+            _studySet.EvictWorkLog().Should().Equal("reshuffled");
+            IgnorePlayActions();
         }
+
+
         [Fact]
         public async Task GoBack_When_At_TheFirstCard_Should_Not_Reshuffle()
         {
-            var original = Sut.WorkingSet;
+            _studySet.EvictWorkLog().Should().BeEmpty();
             await Sut.GoBack(); // 1R
-            Sut.WorkingSet.Should().BeSameAs(original);
+            _studySet.EvictWorkLog().Should().BeEmpty();
             Sut.CurrentTermIndex.Should().Be(0);
         }
 
-        void IDisposable.Dispose()
-        {
-            AndNotOtherEffects();
-
-        }
+        void IDisposable.Dispose() => AndNoOtherEffects();
     }
 }
