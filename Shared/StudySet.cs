@@ -16,6 +16,7 @@ namespace Shared
         private string? _fileName;
         public void Load(string fileName)
         {
+            _fileName = fileName;
             using var reader = new StreamReader(fileName);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
             _cards = csv.GetRecords<Card>().ToArray();
