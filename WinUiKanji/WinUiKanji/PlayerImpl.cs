@@ -29,6 +29,8 @@ namespace WinUiKanji
             var stream = await _synthesizer.SynthesizeTextToStreamAsync(text);
             BackgroundMediaPlayer.Current.Source = 
                 MediaSource.CreateFromStream(stream, stream.ContentType);            
-        }     
+        }
+
+        public Task WaitABit() => Task.Delay(TimeSpan.FromSeconds(1));
     }
 }

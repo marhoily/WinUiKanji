@@ -6,5 +6,6 @@ namespace Shared
     {
         Task Blimp();
         Task Say(string language, string text);
+        Task WaitABit();
     }
 }

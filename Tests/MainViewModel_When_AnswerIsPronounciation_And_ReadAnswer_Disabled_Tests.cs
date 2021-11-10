@@ -10,7 +10,7 @@ public sealed class MainViewModel_When_AnswerIsPronounciation_And_ReadAnswer_Dis
         // Ignore initial reshuffle
         _studySet.EvictWorkLog().Should().Equal("reshuffled");
         Sut.AnswerIsMeaning = false;
-        Sut.ReadAnswerEnabled = false;
+        Sut.NeedToReadAnswer = false;
     }
 
     [Fact]

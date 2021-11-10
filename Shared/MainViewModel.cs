@@ -10,7 +10,7 @@ namespace Shared
     {
         private readonly IPlayer _player;
         private readonly IStudySet _studySet;
-        public bool ReadAnswerEnabled { get; set; } = true;
+        public bool NeedToReadAnswer { get; set; } = true;
         public bool AnswerIsMeaning { get; set; } = true;
         private bool _answerIsRead = false;
 
@@ -63,7 +63,7 @@ namespace Shared
         [ICommand]
         public async Task GoAhead()
         {
-            if (_answerIsRead || !ReadAnswerEnabled)
+            if (_answerIsRead || !NeedToReadAnswer)
             {
                 await ReadQuestionAndStuff();
                 _answerIsRead = false;
@@ -97,7 +97,7 @@ namespace Shared
             if (!_answerIsRead)
             {
                 await GoAhead();
-                await Task.Delay(TimeSpan.FromSeconds(1));
+                await _player.WaitABit();
             }
             _workingSet.Insert(CurrentTermIndex + 2, CurrentCard);
             _workingSet.Add(CurrentCard);
