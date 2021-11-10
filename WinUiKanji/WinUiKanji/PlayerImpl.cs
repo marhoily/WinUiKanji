@@ -25,9 +25,7 @@ namespace WinUiKanji
 
         public async Task Say(string language, string text)
         {
-            _synthesizer.Voice = language == "us-EN" 
-                ? SpeechSynthesizer.DefaultVoice
-                : SpeechSynthesizer.AllVoices.First(v => v.Language == language);
+            _synthesizer.Voice = SpeechSynthesizer.AllVoices.First(v => v.Language == language);
             var stream = await _synthesizer.SynthesizeTextToStreamAsync(text);
             BackgroundMediaPlayer.Current.Source = 
                 MediaSource.CreateFromStream(stream, stream.ContentType);            

@@ -1,10 +1,11 @@
 ﻿using Shared;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Tests
 {
-    internal class FakePlayer : IPlayer
+    public class FakePlayer : IPlayer
     {
         public List<string> Playlist { get; } = new();
         public Task Blimp()
@@ -17,6 +18,13 @@ namespace Tests
         {
             Playlist.Add(culture + ": " + text);
             return Task.CompletedTask;
+        }
+
+        internal string[] EvictPlaylist()
+        {
+            var result = Playlist.ToArray();
+            Playlist.Clear();
+            return result;  
         }
     }
 }

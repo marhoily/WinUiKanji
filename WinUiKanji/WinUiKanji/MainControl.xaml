@@ -85,7 +85,7 @@
                    VerticalAlignment="Top">
             <Run Text="{x:Bind ViewModel.CurrentIndexStr, Mode=OneWay}"/>
             <Run Text="/"/>
-            <Run Text="{x:Bind ViewModel.SourceSetLength, Mode=OneWay}"/>
+            <Run Text="{x:Bind ViewModel.WorkingSetLength, Mode=OneWay}"/>
         </TextBlock>
 
         <StackPanel  Orientation="Vertical"
