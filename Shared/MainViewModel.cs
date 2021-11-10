@@ -37,7 +37,7 @@ namespace Shared
         }
 
         [ICommand]
-        public Task PrevCard()
+        public Task GoBack()
         {
             _answerIsRead = false;
             return Go(-1);
@@ -80,7 +80,7 @@ namespace Shared
 
         private async Task Go(int i)
         {
-            if (ReadAnswerEnabled && !_answerIsRead)
+            if (ReadAnswerEnabled && !_answerIsRead && i >= 0)
             {
                 await ReadAnswer();
                 if (i == 1)
@@ -88,7 +88,8 @@ namespace Shared
                 return;
             }
             var nextVal = (CurrentTermIndex + i) % WorkingSet.Count;
-            if (nextVal == -1) return;
+            if (nextVal == -1) 
+                return;
             if (nextVal == 0 && i == 1)
             {
                 _workingSet = _studySet.GetShuffle();

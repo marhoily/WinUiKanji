@@ -5,9 +5,9 @@ namespace Shared
     [UsedImplicitly]
     public sealed class Card
     {
-        public string Kanji { get; set; }
-        public string Meaning { get; set; }
-        public string ToPronounce { get; set; }
+        public string Kanji { get; set; } = null!;
+        public string Meaning { get; set; } = null!;
+        public string ToPronounce { get; set; } = null!;
         public int WellKnown { get; set; }
     }
 }

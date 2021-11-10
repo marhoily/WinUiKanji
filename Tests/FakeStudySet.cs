@@ -1,16 +1,11 @@
 ﻿using Shared;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace Tests;
 
-namespace Tests
+public class FakeStudySet : IStudySet
 {
-    internal class FakeStudySet : IStudySet
-    {
-        private readonly List<Card> _cards;
-        public FakeStudySet(params Card[] cards) => _cards = cards.ToList();
-        public List<Card> GetShuffle() => _cards;
-        public void Load(string fileName) { }
-        public Task SaveAsync() => Task.CompletedTask;
-    }
+    public List<string> WorkLog { get; } = new();
+    public List<Card> Cards { get; } = new();
+    public List<Card> GetShuffle() => Cards.ToList();
+    public void Load(string fileName) { }
+    public Task SaveAsync() => Task.CompletedTask;
 }

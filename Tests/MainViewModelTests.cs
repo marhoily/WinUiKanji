@@ -1,64 +1,80 @@
-using FluentAssertions;
 using Shared;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace Tests
 {
-    public sealed class MainViewModelTests : MainViewModelTestBase
+    public sealed class MainViewModelTests : MainViewModelTestBase, IDisposable
     {
-        private MainViewModel _vm;
-
-        public MainViewModelTests()
-        {
-            _vm = new(_player, new FakeStudySet(C1, C2));
-        }
-
         [Fact]
         public void CurrentIndexStr()
         {
-            _vm.CurrentIndexStr.Should().Be("1");
+            Sut.CurrentIndexStr.Should().Be("1");
         }
         [Fact]
         public void CurrentCard()
         {
-            _vm.CurrentCard.Should().Be(C1);
+            Sut.CurrentCard.Should().Be(C1);
         }
         [Fact]
         public void WorkingSetLength()
         {
-            _vm.WorkingSetLength.Should().Be("2");
+            Sut.WorkingSetLength.Should().Be("2");
         }
         [Fact]
         public async Task PrevCard_When_At0_Should_Do_NothingAsync()
         {
-            await _vm.PrevCard();
-            _vm.CurrentTermIndex.Should().Be(0);
-            await _vm.CorrectGoNext();
-            _vm.CurrentTermIndex.Should().Be(0);
+            await Sut.GoBack();
+            Sut.CurrentTermIndex.Should().Be(0);
+            await Sut.CorrectGoNext();
+            Sut.CurrentTermIndex.Should().Be(0);
+            _player.EvictPlaylist();
         }
         [Fact]
         public async Task PrevCard_When_At0R_Should_Reset_AnswerIsRead()
         {
-            await _vm.CorrectGoNext();
-            await _vm.PrevCard();
-            _vm.CurrentTermIndex.Should().Be(0);
-            await _vm.CorrectGoNext();
-            _vm.CurrentTermIndex.Should().Be(0);
+            await Sut.CorrectGoNext();
+            await Sut.GoBack();
+            Sut.CurrentTermIndex.Should().Be(0);
+            await Sut.CorrectGoNext();
+            Sut.CurrentTermIndex.Should().Be(0);
+            _player.EvictPlaylist();
         }
         [Fact]
         public async Task CorrectGoNext_Should_Read_Answer()
         {
-            await _vm.CorrectGoNext();
-            _vm.CurrentTermIndex.Should().Be(0);
+            await Sut.CorrectGoNext();
+            Sut.CurrentTermIndex.Should().Be(0);
             _player.EvictPlaylist().Should().Equal("en-US: m1");
-            await _vm.CorrectGoNext();
-            _vm.CurrentTermIndex.Should().Be(1);
+            await Sut.CorrectGoNext();
+            Sut.CurrentTermIndex.Should().Be(1);
             _player.EvictPlaylist().Should().Equal("ja-JP: p2");
-            await _vm.CorrectGoNext();
-            _vm.CurrentTermIndex.Should().Be(1);
+            await Sut.CorrectGoNext();
+            Sut.CurrentTermIndex.Should().Be(1);
             _player.EvictPlaylist().Should().Equal("en-US: m2");
         }
+        [Fact]
+        public async Task CorrectGoNext_When_WrapAround_Should_Reshuffle()
+        {
+            await Sut.CorrectGoNext(); // 1R
+            await Sut.CorrectGoNext(); // 2
+            await Sut.CorrectGoNext(); // 2R
+            var original = Sut.WorkingSet;
+            await Sut.CorrectGoNext(); // Reshuffle
+            Sut.WorkingSet.Should().NotBeSameAs(original);
+            _player.EvictPlaylist();
+        }
+        [Fact]
+        public async Task GoBack_When_At_TheFirstCard_Should_Not_Reshuffle()
+        {
+            var original = Sut.WorkingSet;
+            await Sut.GoBack(); // 1R
+            Sut.WorkingSet.Should().BeSameAs(original);
+            Sut.CurrentTermIndex.Should().Be(0);
+        }
 
+        void IDisposable.Dispose()
+        {
+            AndNotOtherEffects();
+
+        }
     }
 }

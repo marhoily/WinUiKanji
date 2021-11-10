@@ -61,7 +61,7 @@
                 Padding="30,5"
                 FontSize="20"
                 IsTabStop="False"
-                Command="{x:Bind ViewModel.PrevCardCommand}"
+                Command="{x:Bind ViewModel.GoBackCommand}"
                 HorizontalAlignment="Center" >
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="Left" />
