@@ -17,6 +17,12 @@ public class FakePlayer : IPlayer
         return Task.CompletedTask;
     }
 
+    public Task Wait()
+    {
+        Playlist.Add("wait");
+        return Task.CompletedTask;
+    }
+
     public Task WaitABit()
     {
         Playlist.Add("silense");
